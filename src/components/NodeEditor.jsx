@@ -11,6 +11,7 @@ import {
 } from "@xyflow/react";
 import Node from './Node';
 import "@xyflow/react/dist/style.css";
+import { v4 as uuidv4 } from 'uuid';
 
 const initialNodes = JSON.parse(localStorage.getItem('nodes')) || [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" }, type: 'custom' },
@@ -66,13 +67,16 @@ const NodeEditor = () => {
 
   const addNode = () => {
     const newNode = {
-      id: (nodeCounter + 1).toString(),
+      id: uuidv4(),
       position: { x: Math.random() * 400, y: Math.random() * 400 },
       data: { label: `Node ${nodeCounter + 1}` },
       type: 'custom',
     };
-    setNodes((nds) => nds.concat(newNode));
-    setNodeCounter(nodeCounter + 1);
+    setNodes((nds) => {
+      const newNodes = nds.concat(newNode);
+      setNodeCounter(newNodes.length);
+      return newNodes;
+    });
   };
 
   const deleteNode = (id) => {
